@@ -114,7 +114,7 @@ export default function HomePage() {
                 className="blessing-input"
                 value={guest}
                 onChange={(e) => setGuest(e.target.value)}
-                placeholder="e.g. Mr. Panha"
+                placeholder="លោក/លោកស្រី..."
                 maxLength={60}
               />
             </div>
