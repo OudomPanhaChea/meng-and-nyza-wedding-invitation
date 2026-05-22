@@ -1,0 +1,314 @@
+@import "tailwindcss";
+
+@theme {
+  /* Fonts */
+  --font-moul: "Moul", serif;
+  --font-hanuman: "Hanuman", serif;
+  --font-display: "Cormorant Garamond", serif;
+  --font-body: "EB Garamond", serif;
+
+  /* Pink palette — primary based on #ffe5ec */
+  --color-pink-50:    #FFF2F5;
+  --color-pink-100:   #FFE5EC;
+  --color-pink-200:   #FFCCD8;
+  --color-pink-300:   #FFB3C4;
+  --color-pink-400:   #FF80A0;
+  --color-pink-500:   #FF4D79;
+  --color-pink-600:   #E63963;
+  --color-pink-700:   #BF2A4D;
+
+  /* Luxury Gold palette */
+  --color-gold-200:   #E6C875;
+  --color-gold-300:   #D4AF37;
+  --color-gold-400:   #b59410;
+  --color-gold-500:   #b59410;
+  --color-gold-600:   #b59410;
+  --color-gold-700:   #b59410;
+
+  /* Blue accent */
+  --color-blue-100:   #EEF4FF;
+  --color-blue-200:   #D6E8FA;
+  --color-blue-300:   #C5D8F0;
+  --color-blue-400:   #8FB3D5;
+  --color-blue-500:   #5A8FC0;
+
+  /* Neutrals */
+  --color-cream:      #FEFCFD;
+  --color-rose-dark:  #b59410; /* Dark luxury gold for body text */
+  --color-charcoal:   #2C2C2C;
+}
+
+/* ─── Keyframes ─────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-12px); }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Base ───────────────────────────────────── */
+@layer base {
+  html { scroll-behavior: smooth; background-color: #050204; }
+  body {
+    font-family: var(--font-body);
+    color: var(--color-rose-dark);
+    background-color: #050204; /* Black outside for desktop */
+    overflow-x: hidden;
+  }
+  
+  /* Responsive app column.
+     - Phones (< 768px): full width, no dark sides.
+     - Tablets + desktops (≥ 768px, incl. iPad in any orientation):
+       capped at 480px column. Keeping the column narrow on iPad
+       prevents the roof + bottom flower decorations from spreading
+       wide enough that the side-hanging flowers crowd the content.
+
+     Width-based (not pointer-based) breakpoints so iPad — which
+     reports pointer: coarse — still falls into the capped column. */
+  :root {
+    --app-width: 100%;
+  }
+  @media (min-width: 768px) {
+    :root {
+      --app-width: 480px;
+    }
+  }
+
+  #root {
+    width: 100%;
+    max-width: var(--app-width);
+    margin: 0 auto;
+    min-height: 100vh;
+    background-color: transparent;
+    position: relative;
+    overflow-x: hidden;
+  }
+  /* Drop shadow on the capped column (where the dark body shows beside
+     it). At phone widths the column is full-bleed, so the shadow would
+     read as a stray dark vignette inside the viewport — skip it. */
+  @media (min-width: 768px) {
+    #root {
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+    }
+  }
+
+  /* Helper for fixed/absolute layers that need to match the app column. */
+  .app-col {
+    max-width: var(--app-width);
+  }
+
+  /* Bottom flowers anchor.
+     - Phones (full-width column): negative bottom scales with the
+       viewport so the clip ratio stays the same on small screens.
+       -20vw ≈ -80px at 400px wide → ~30% clipped.
+     - Capped column (≥ 768px, incl. iPad + desktop): container is a
+       fixed 480px wide, so a fixed pixel offset gives the same
+       proportional clip. */
+  .bottom-flowers-anchor {
+    bottom: -25vw;
+  }
+  @media (min-width: 768px) {
+    .bottom-flowers-anchor {
+      bottom: -120px;
+    }
+  }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--color-pink-50); }
+  ::-webkit-scrollbar-thumb { background: var(--color-pink-300); border-radius: 2px; }
+}
+
+/* ─── Components ─────────────────────────────── */
+@layer components {
+  /* Fixed page background */
+  .page-bg {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    z-index: -1;
+    background: linear-gradient(160deg,
+      #FFE5EC 0%,
+      #FFF2F5 35%,
+      #FEFCFD 70%,
+      #FDF9EB 100%
+    );
+  }
+  .page-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cpath d='M30 22 Q32 26 30 30 Q28 26 30 22Z M22 30 Q26 32 30 30 Q26 28 22 30Z M30 38 Q32 34 30 30 Q28 34 30 38Z M38 30 Q34 32 30 30 Q34 28 38 30Z' fill='%23C87FA0' opacity='0.18'/%3E%3Ccircle cx='30' cy='30' r='1.4' fill='%23C87FA0' opacity='0.14'/%3E%3C/svg%3E");
+    background-size: 60px 60px;
+  }
+  /* Thin divider with center ornament */
+  .ornament-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .ornament-divider::before,
+  .ornament-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(240,208,112,0.80), transparent);
+  }
+
+  /* Gradient text — bright enough to read on dark photo background */
+  .pink-text {
+    background: linear-gradient(135deg, #A8264A 0%, #8E1D3D 50%, #6B1230 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .gold-text {
+    color: #b59410;
+    background: none;
+    -webkit-text-fill-color: #b59410;
+  }
+
+  /* Primary button */
+  .btn-primary {
+    display: inline-block;
+    padding: 0.625rem 2.5rem;
+    border-radius: 9999px;
+    border: 1px solid var(--color-gold-300);
+    background: linear-gradient(135deg, var(--color-gold-200), var(--color-gold-300), var(--color-gold-200), var(--color-gold-300));
+    background-size: 300% auto;
+    color: var(--color-gold-700);
+    font-family: var(--font-hanuman);
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 20px rgba(212,175,55,0.3);
+    animation: shimmer 3.5s linear infinite;
+  }
+  .btn-primary:hover {
+    box-shadow: 0 8px 36px rgba(212,175,55,0.55);
+    transform: translateY(-2px);
+  }
+
+  /* Countdown box */
+  .countdown-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: rgba(255,255,255,0.9);
+    border: 1px solid var(--color-pink-200);
+    border-radius: 4px;
+    min-width: 72px;
+  }
+
+  /* Blessing input */
+  .blessing-input {
+    width: 100%;
+    padding: 0.625rem 1rem;
+    border: 1px solid rgba(240, 208, 112, 0.30);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    color: var(--color-rose-dark);
+    font-family: var(--font-hanuman);
+    font-size: 0.875rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .blessing-input:focus {
+    border-color: rgba(240, 208, 112, 0.65);
+    box-shadow: 0 0 0 3px rgba(240,208,112,0.12);
+  }
+  .blessing-input::placeholder {
+    color: var(--color-gold-200);
+  }
+
+  /* Blessing message card */
+  .msg-card {
+    padding: 1rem 1.25rem;
+    background: rgba(255, 252, 250, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 209, 220, 0.38);
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .msg-card:hover {
+    border-color: var(--color-pink-300);
+    box-shadow: 0 6px 28px rgba(0,0,0,0.18);
+  }
+
+  /* GSAP reveal target (starts hidden) */
+  .gsap-reveal {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+
+  /* 3D Utilities */
+  .transform-style-3d {
+    transform-style: preserve-3d;
+  }
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+}
+
+/* ─── Custom utilities ───────────────────────────
+   Tailwind v4 @utility — single class compiling to a full button
+   treatment (resting + hover + active + double-ring ornament). */
+@utility btn-open {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0.875rem 2.5rem; /* py-3.5 px-10 */
+  border-radius: 9999px;
+  border: 1.5px solid var(--color-gold-400);
+  background: linear-gradient(135deg, #FFFFFF 0%, #FFFAF0 55%, #FFEFD5 100%);
+  color: var(--color-gold-400);
+  font-family: var(--font-moul);
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow:
+    0 4px 16px rgba(181, 148, 16, 0.18),
+    0 1px 3px rgba(181, 148, 16, 0.1);
+  transition: all 0.3s ease-out;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border-radius: 9999px;
+    border: 1px solid rgba(181, 148, 16, 0.45);
+    pointer-events: none;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #FFFAF0 0%, #FFE9D5 50%, #FFD9D8 100%);
+    box-shadow:
+      0 10px 28px rgba(181, 148, 16, 0.3),
+      0 2px 8px rgba(181, 148, 16, 0.18);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(181, 148, 16, 0.18);
+  }
+}
+
