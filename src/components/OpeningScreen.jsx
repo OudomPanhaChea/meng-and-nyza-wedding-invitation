@@ -403,14 +403,14 @@ export default function OpeningScreen({ onOpen, guestName, assetsReady = true })
 
       {/* ── Roof flowers — z-30, centered along the top edge.
            Wrapped in its own absolute+overflow-hidden layer so iOS Safari
-           clips the 10% horizontal overflow correctly. (The outer flex
-           container's overflow:hidden doesn't always clip transformed
-           descendants on iPad — separate clipping context fixes it.) */}
+           clips the horizontal overflow correctly. Positioning mirrors
+           FixedDecoration (App.jsx) — same top + width so the opening
+           composition matches the post-open invitation view. */}
       <div className="absolute inset-0 z-30 pointer-events-none overflow-hidden">
         <div
           ref={roofRef}
           className="absolute select-none left-1/2 -translate-x-1/2"
-          style={{ top: "-70px", width: "110%" }}
+          style={{ top: "-120px", width: "112%" }}
         >
           <img
             src={roofFlowersImg}
@@ -432,12 +432,13 @@ export default function OpeningScreen({ onOpen, guestName, assetsReady = true })
       </div>
 
       {/* ── Bottom flowers — z-30, centered along the bottom edge.
-           Same dedicated overflow-hidden wrapper pattern as the roof. */}
+           Width bumped to 112% to match the roof, so the lower frame
+           feels as full as the upper one once iOS Safari clips properly. */}
       <div className="absolute inset-0 z-30 pointer-events-none overflow-hidden">
         <div
           ref={bottomRef}
           className="absolute bottom-flowers-anchor select-none left-1/2 -translate-x-1/2 blur-[0.5px]"
-          style={{ width: "100%" }}
+          style={{ width: "112%" }}
         >
           <img
             src={bottomFlowersImg}
