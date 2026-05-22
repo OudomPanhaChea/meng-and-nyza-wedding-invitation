@@ -2,11 +2,13 @@ import { useState, useMemo } from "react";
 import { User, Link as LinkIcon, Copy, Eye, Check } from "lucide-react";
 import { encodeGuestSlug } from "../lib/guestSlug";
 import { GOLD } from "../tokens";
+import DeveloperCredit from "./DeveloperCredit";
 import FallingPetals from "./FallingPetals";
 import SectionTitle from "./SectionTitle";
 import backgroundImg from "../assets/background.png";
 import roofFlowersImg from "../assets/roof-flowers.png";
 import bottomFlowersImg from "../assets/bottom-flowers.png";
+import OrnateDivider from "./OrnateDivider";
 
 /* Build an invitation URL from the current origin and the chosen guest
    name. Khmer names are packed via a custom 1-byte-per-codepoint scheme
@@ -89,15 +91,14 @@ export default function HomePage() {
       {/* ── Layer 4: content ── */}
       <div className="relative z-10 min-h-dvh flex flex-col items-center justify-center px-5 py-16">
         <div className="w-full max-w-sm space-y-5">
-          <SectionTitle className="home">ការអញ្ជើញពិសេស</SectionTitle>
+          <SectionTitle className="home" size="3xl" subtitle="- ធៀបការ Digital -">
+            WISETHEAB
+          </SectionTitle>
 
-          <p className="text-center font-display italic text-base tracking-[0.25em]">
+          <p className="text-center font-display italic text-xl tracking-[0.25em]">
             Personalized Invitation
           </p>
-          <p
-            className="text-center font-hanuman text-xs -mt-3"
-            style={{ color: "rgba(181,148,16,0.75)" }}
-          >
+          <p className="text-center font-hanuman -mt-3">
             បំពេញឈ្មោះភ្ញៀវ ដើម្បីបង្កើតតំណភ្ជាប់
           </p>
 
@@ -179,14 +180,8 @@ export default function HomePage() {
               </button>
             </div>
           </div>
-
-          <p
-            className="text-center font-display italic text-xs mt-4"
-            style={{ color: "rgba(181,148,16,0.6)" }}
-          >
-            Share the link with your guest — they'll see their name on the
-            invitation.
-          </p>
+          <OrnateDivider className="mx-auto my-8" />
+          <DeveloperCredit className="mt-12" />
         </div>
       </div>
     </div>

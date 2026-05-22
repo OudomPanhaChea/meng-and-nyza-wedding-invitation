@@ -1,11 +1,11 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import OrnateDivider from "./OrnateDivider";
+import DeveloperCredit from "./DeveloperCredit";
 import { weddingConfig } from "../config";
 import { useSectionReveal } from "../hooks/useSectionReveal";
 import { GOLD } from "../tokens";
 import bottomFlowersImg from "../assets/bottom-flowers.png";
-import wisestepLogo from "../assets/wisestep-logo.png";
 
 export default function Footer() {
   const ref = useRef(null);
@@ -96,26 +96,7 @@ export default function Footer() {
 
       <OrnateDivider className="footer-divider mt-12 mb-10" width={120} />
 
-      <a
-        href="https://www.facebook.com/WiseStepSolution"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="WiseTheab - Innovating Modern Solutions"
-        className="footer-credit relative z-10 mt-24 flex flex-col items-center gap-1 select-none no-underline"
-      >
-        <img
-          src={wisestepLogo}
-          alt="WiseTheab"
-          draggable={false}
-          className="h-12 w-auto"
-        />
-        <p className="font-display tracking-[0.2em] text-sm font-semibold">
-          WiseTheab
-        </p>
-        <p className="font-display text-sm tracking-[0.15em]">
-          Innovating Modern Solutions
-        </p>
-      </a>
+      <DeveloperCredit className="footer-credit mt-24" />
 
       <img
         src={bottomFlowersImg}
