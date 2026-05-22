@@ -1,6 +1,7 @@
 import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import OpeningScreen from "./components/OpeningScreen";
 import HeroSection from "./components/HeroSection";
 import ScheduleSection from "./components/ScheduleSection";
@@ -402,6 +403,8 @@ export default function App() {
       {route}
       {/* Vercel Web Analytics — collects page views & route changes. */}
       <Analytics />
+      {/* Vercel Speed Insights — Core Web Vitals (LCP, FID, CLS, etc.). */}
+      <SpeedInsights />
     </>
   );
 }
