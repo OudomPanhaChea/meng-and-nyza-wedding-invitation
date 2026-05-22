@@ -3,8 +3,7 @@ import { createPortal } from 'react-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
-import { useScrollReveal } from '../hooks/useScrollReveal';
-import OrnateDivider from './OrnateDivider';
+import SectionTitle from './SectionTitle';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -129,7 +128,7 @@ function flattenPhotos(blocks) {
 }
 
 export default function GallerySection() {
-  const ref = useScrollReveal();
+  const ref = useRef(null);
   const gridRef = useRef(null);
   const [photos, setPhotos] = useState(null);
   const [selectedIdx, setSelectedIdx] = useState(null);
@@ -295,12 +294,7 @@ export default function GallerySection() {
   return (
     <section id="gallery" ref={ref} className="px-5 py-7">
       <div className="max-w-xl mx-auto space-y-5">
-        {/* Section heading — same pattern as ScheduleSection */}
-        <div className="gallery-title text-center">
-          <h2 className="font-moul text-2xl">វិចិត្រសាល</h2>
-        </div>
-
-        <OrnateDivider className="gallery-divider mb-8" />
+        <SectionTitle className="gallery">វិចិត្រសាល</SectionTitle>
 
         {/* Photo grid */}
         <div ref={gridRef} className="grid grid-cols-2 gap-3">

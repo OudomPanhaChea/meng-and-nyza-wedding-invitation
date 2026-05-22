@@ -1,55 +1,33 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Lotus from "./Lotus";
 import OrnateDivider from "./OrnateDivider";
 import { weddingConfig } from "../config";
+import { useSectionReveal } from "../hooks/useSectionReveal";
+import { GOLD } from "../tokens";
 import bottomFlowersImg from "../assets/bottom-flowers.png";
 import wisestepLogo from "../assets/wisestep-logo.png";
-
-gsap.registerPlugin(ScrollTrigger);
-
-const GOLD = "#b59410";
 
 export default function Footer() {
   const ref = useRef(null);
 
+  useSectionReveal(ref, ({ floatUp }) => {
+    floatUp(".footer-title", { duration: 1.6 });
+    floatUp(".footer-top-divider", { delay: 0.15 });
+    floatUp(".footer-apology", { delay: 0.25, y: 32, duration: 1.6 });
+    floatUp(".footer-names", { delay: 0.1, y: 28 });
+    floatUp(".footer-divider", { delay: 0.25 });
+    floatUp(".footer-meta", { delay: 0.35 });
+    floatUp(".footer-thanks", { delay: 0.5 });
+    floatUp(".footer-credit", { delay: 0.6, y: 16, duration: 1.2 });
+    floatUp(".footer-flowers", { delay: 0.15, y: 40, duration: 1.8 });
+  });
+
+  // Ambient sway on the bottom flowers — sits outside useSectionReveal
+  // because it's an infinite loop, not a one-shot scroll reveal.
   useEffect(() => {
     const section = ref.current;
     if (!section) return;
-
     const ctx = gsap.context(() => {
-      const floatUp = (
-        selector,
-        { delay = 0, y = 24, duration = 1.4 } = {},
-      ) => {
-        gsap.fromTo(
-          selector,
-          { opacity: 0, y, filter: "blur(5px)" },
-          {
-            opacity: 1,
-            y: 0,
-            filter: "blur(0px)",
-            duration,
-            delay,
-            ease: "power2.out",
-            scrollTrigger: { trigger: selector, start: "top 92%", once: true },
-          },
-        );
-      };
-
-      floatUp(".footer-title", { duration: 1.6 });
-      floatUp(".footer-top-divider", { delay: 0.15 });
-      floatUp(".footer-apology", { delay: 0.25, y: 32, duration: 1.6 });
-      floatUp(".footer-lotus", { delay: 0.1, duration: 1.6 });
-      floatUp(".footer-names", { delay: 0.1, y: 28 });
-      floatUp(".footer-divider", { delay: 0.25 });
-      floatUp(".footer-meta", { delay: 0.35 });
-      floatUp(".footer-thanks", { delay: 0.5 });
-      floatUp(".footer-credit", { delay: 0.6, y: 16, duration: 1.2 });
-      floatUp(".footer-flowers", { delay: 0.15, y: 40, duration: 1.8 });
-
-      // Subtle ambient sway on the bottom flowers.
       gsap.to(".footer-flowers", {
         y: "+=6",
         duration: 5.2,
@@ -59,7 +37,6 @@ export default function Footer() {
         delay: 2.0,
       });
     }, section);
-
     return () => ctx.revert();
   }, []);
 
@@ -69,11 +46,9 @@ export default function Footer() {
       className="relative pt-14 pb-32 px-5 text-center overflow-hidden"
     >
       <div className="relative max-w-sm mx-auto">
-        {/* Thanks & apology — opens the footer with the family's message */}
         <div className="footer-title text-center">
           <h2 className="font-moul gold-text text-xl space-y-1.5">
             <p>សេចក្ដីថ្លែងអំណរគុណ</p>
-
             <p>និងសូមអភ័យទោស</p>
           </h2>
         </div>
@@ -112,22 +87,15 @@ export default function Footer() {
         </div>
 
         <div className="footer-thanks">
-          <p
-            className="font-moul"
-          >
-            &nbsp;សូមអរគុណ&nbsp;
-          </p>
-          <p
-            className="font-display italic mt-2 tracking-[0.2em]"
-          >
+          <p className="font-moul">&nbsp;សូមអរគុណ&nbsp;</p>
+          <p className="font-display italic mt-2 tracking-[0.2em]">
             With Love &amp; Gratitude
           </p>
         </div>
       </div>
-      
+
       <OrnateDivider className="footer-divider mt-12 mb-10" width={120} />
 
-      {/* Developer credit — small, muted, anchored to the very bottom */}
       <a
         href="https://www.facebook.com/WiseStepSolution"
         target="_blank"
@@ -141,14 +109,10 @@ export default function Footer() {
           draggable={false}
           className="h-12 w-auto"
         />
-        <p
-          className="font-display tracking-[0.2em] text-sm font-semibold"
-        >
+        <p className="font-display tracking-[0.2em] text-sm font-semibold">
           WiseTheab
         </p>
-        <p
-          className="font-display text-sm tracking-[0.15em]"
-        >
+        <p className="font-display text-sm tracking-[0.15em]">
           Innovating Modern Solutions
         </p>
       </a>
@@ -159,7 +123,6 @@ export default function Footer() {
         draggable={false}
         className="footer-flowers absolute -bottom-22 left-1/2 -translate-x-1/2 w-full pointer-events-none select-none scale-110 block"
       />
-
     </footer>
   );
 }

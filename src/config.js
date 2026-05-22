@@ -1,5 +1,5 @@
 // Wedding invitation config — edit this file to customize
-import mapQRCode from "./assets/map-qrcode.png";;
+import mapQRCode from "./assets/map-qrcode.png";
 export const weddingConfig = {
   // Couple names
   groomKhmer: "ម៉ឹង ស៊ឺម៉េង",
@@ -69,22 +69,6 @@ export const weddingConfig = {
       ],
     },
   ],
-
-  // Gallery photos (replace with real paths in public/)
-  gallery: [
-    { src: "/photos/photo1.jpg", alt: "Engagement session" },
-    { src: "/photos/photo2.jpg", alt: "Pre-wedding shoot" },
-    { src: "/photos/photo3.jpg", alt: "Traditional ceremony" },
-    { src: "/photos/photo4.jpg", alt: "Couple portrait" },
-    { src: "/photos/photo5.jpg", alt: "Romantic moment" },
-    { src: "/photos/photo6.jpg", alt: "Joy & laughter" },
-  ],
-
-  // Telegram bot config — fill in your bot token & chat ID
-  telegram: {
-    botToken: "YOUR_BOT_TOKEN_HERE",
-    chatId: "YOUR_CHAT_ID_HERE",
-  },
 
   // Parents
   groomParents: {

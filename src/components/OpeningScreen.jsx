@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { weddingConfig } from "../config";
+import { GOLD } from "../tokens";
 import backgroundImg from "../assets/background.png";
 import roofFlowersImg from "../assets/roof-flowers.png";
 import bottomFlowersImg from "../assets/bottom-flowers.png";
@@ -8,9 +9,6 @@ import coupleNameImg from "../assets/seumeng_and_nisa.png";
 import textFrameImg from "../assets/text-frame.png";
 import FallingPetals from "./FallingPetals";
 import OrnateDivider from "./OrnateDivider";
-
-/* ─── Color tokens ───────────────────────────── */
-const GOLD = "#b59410";
 
 /* Guest name centered inside text-frame.png — auto-shrinks so it always
    fits inside the white area, never wraps. Max size = 1.5rem (text-2xl). */
@@ -42,7 +40,6 @@ function GuestNameInFrame({ name }) {
     fit();
     window.addEventListener("resize", fit);
     return () => window.removeEventListener("resize", fit);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name]);
 
   return (

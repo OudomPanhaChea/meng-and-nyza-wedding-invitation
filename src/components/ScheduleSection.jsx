@@ -3,11 +3,10 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import * as Lucide from "lucide-react";
 import { weddingConfig } from "../config";
-import OrnateDivider from "./OrnateDivider";
+import { GOLD } from "../tokens";
+import SectionTitle from "./SectionTitle";
 
 gsap.registerPlugin(ScrollTrigger);
-
-const GOLD = "#b59410";
 
 function EventIcon({ name, size = 16, strokeWidth = 2, className = "" }) {
   const Icon = Lucide[name] || Lucide.Sparkles;
@@ -196,12 +195,7 @@ export default function ScheduleSection() {
   return (
     <section id="schedule" ref={ref} className="px-5 py-7">
       <div className="max-w-xl mx-auto space-y-5">
-        {/* Section heading */}
-        <div className="sched-title text-center">
-          <h2 className="font-moul text-2xl">កាលវិភាគកម្មវិធី</h2>
-        </div>
-
-        <OrnateDivider className="" />
+        <SectionTitle className="sched">កាលវិភាគកម្មវិធី</SectionTitle>
 
         {/* Roadmap */}
         <div className="relative pl-24">

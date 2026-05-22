@@ -11,7 +11,6 @@ import FallingPetals from "./components/FallingPetals";
 import HomePage from "./components/HomePage";
 import backgroundImg from "./assets/background.png";
 import roofFlowersImg from "./assets/roof-flowers.png";
-import bottomFlowersImg from "./assets/bottom-flowers.png";
 import themeSong from "./assets/audios/theme-song.mp3";
 
 /* ── Always-mounted photo background + animated decoration ──────────────

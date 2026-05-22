@@ -1,10 +1,9 @@
 import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { weddingConfig } from "../config";
+import { GOLD } from "../tokens";
 import OrnateDivider from "./OrnateDivider";
 import coupleNameImg from "../assets/seumeng_and_nisa.png";
-
-const GOLD = "#b59410";
 
 function pad(n) {
   return String(n).padStart(2, "0");

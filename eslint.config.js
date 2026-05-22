@@ -17,5 +17,10 @@ export default defineConfig([
       globals: globals.browser,
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
+    rules: {
+      // Khmer copy intentionally includes ZWSP (U+200B) as a word-break
+      // hint between syllables — allow it in JSX text/strings.
+      'no-irregular-whitespace': ['error', { skipStrings: true, skipJSXText: true }],
+    },
   },
 ])
