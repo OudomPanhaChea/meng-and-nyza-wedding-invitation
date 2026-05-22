@@ -30,12 +30,25 @@ const PHOTO_ENTRIES = Object.entries(photoModules)
 
 // Probe the natural dimensions of an image URL → resolve with its
 // orientation flag. Used to decide layout (landscape vs portrait).
+// Times out after PROBE_TIMEOUT_MS so a single stalled image (slow
+// network, lossy connection) can't keep the whole gallery from
+// rendering. On timeout we assume portrait — matches the majority of
+// the wedding shots and lets the lazy <img> tags take over loading.
+const PROBE_TIMEOUT_MS = 6000;
+
 function loadAspect(entry) {
   return new Promise((resolve) => {
     const img = new Image();
-    img.onload = () =>
-      resolve({ ...entry, portrait: img.naturalHeight > img.naturalWidth });
-    img.onerror = () => resolve({ ...entry, portrait: false });
+    let settled = false;
+    const finish = (portrait) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      resolve({ ...entry, portrait });
+    };
+    const timer = setTimeout(() => finish(true), PROBE_TIMEOUT_MS);
+    img.onload = () => finish(img.naturalHeight > img.naturalWidth);
+    img.onerror = () => finish(false);
     img.src = entry.src;
   });
 }
