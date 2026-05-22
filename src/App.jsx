@@ -9,10 +9,25 @@ import BlessingSection from "./components/BlessingSection";
 import Footer from "./components/Footer";
 import FallingPetals from "./components/FallingPetals";
 import HomePage from "./components/HomePage";
+import { useImagePreload } from "./hooks/useImagePreload";
 import { decodeGuestSlug } from "./lib/guestSlug";
 import backgroundImg from "./assets/background.png";
 import roofFlowersImg from "./assets/roof-flowers.png";
+import bottomFlowersImg from "./assets/bottom-flowers.png";
+import coupleNameImg from "./assets/seumeng_and_nisa.png";
+import textFrameImg from "./assets/text-frame.png";
 import themeSong from "./assets/audios/theme-song.mp3";
+
+/* Critical decoration the opening sequence needs before it can play
+   convincingly — the cinematic flash → reveal looks broken if any of
+   these are still downloading when the animation kicks off. */
+const PRELOAD_IMAGES = [
+  backgroundImg,
+  roofFlowersImg,
+  bottomFlowersImg,
+  coupleNameImg,
+  textFrameImg,
+];
 
 /* ── Always-mounted photo background + animated decoration ──────────────
    Renders regardless of `opened` so the background is never absent.
@@ -246,6 +261,7 @@ function OpenedContent() {
 function Invitation({ guestName }) {
   const [opened, setOpened] = useState(false);
   const audioRef = useRef(null);
+  const assetsReady = useImagePreload(PRELOAD_IMAGES);
 
   // Theme-song playback. Browsers block autoplay-with-sound until a user
   // gesture lands, so we (1) try to start immediately on mount in case
@@ -336,11 +352,15 @@ function Invitation({ guestName }) {
         playsInline
       />
 
-      {/* Opening screen sits on top (z-50); unmounts after the button click */}
+      {/* Opening screen sits on top (z-50); unmounts after the button click.
+          `assetsReady` gates the entrance animation so the cinematic flash
+          → reveal never plays while the photo background is still loading
+          (the white flash overlay stays opaque, acting as the loader). */}
       {!opened && (
         <OpeningScreen
           onOpen={() => setOpened(true)}
           guestName={guestName}
+          assetsReady={assetsReady}
         />
       )}
 

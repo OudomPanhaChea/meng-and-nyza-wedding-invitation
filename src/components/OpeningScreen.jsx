@@ -160,7 +160,7 @@ function HeroCover({ onOpen, cardRef, guestName }) {
 }
 
 /* ─── Opening Screen ─────────────────────────── */
-export default function OpeningScreen({ onOpen, guestName }) {
+export default function OpeningScreen({ onOpen, guestName, assetsReady = true }) {
   const containerRef = useRef(null);
   const bgRef = useRef(null);
   const cardRef = useRef(null);
@@ -168,7 +168,40 @@ export default function OpeningScreen({ onOpen, guestName }) {
   const bottomRef = useRef(null);
   const flashRef = useRef(null);
 
+  // Pre-paint: hide everything that the entrance will reveal so there's
+  // no flash of fully-visible content before GSAP attaches initial state.
+  // Runs synchronously before paint, independent of assetsReady so the
+  // white flash overlay covers the scene from the very first frame.
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.set(cardRef.current, { opacity: 0, scale: 1.08, y: 0 });
+      gsap.set(roofRef.current, {
+        opacity: 0,
+        y: -14,
+        scale: 1.12,
+        transformOrigin: "50% 0%",
+      });
+      gsap.set(bottomRef.current, {
+        opacity: 0,
+        y: 14,
+        scale: 1.12,
+        transformOrigin: "50% 100%",
+      });
+      gsap.set(bgRef.current, {
+        filter: "blur(18px) brightness(2.6)",
+        scale: 1.28,
+        y: 12,
+      });
+    }, containerRef);
+    return () => ctx.revert();
+  }, []);
+
   useEffect(() => {
+    // Hold the white flash + pre-entrance frame until critical photo
+    // assets have loaded. Otherwise the flash fades to reveal a
+    // half-loaded background and the cinematic feel collapses.
+    if (!assetsReady) return;
+
     const ctx = gsap.context(() => {
       // ── Initial states ────────────────────────────────────────────────
       // Card starts slightly larger — zooms DOWN to settle, matching the
@@ -304,7 +337,7 @@ export default function OpeningScreen({ onOpen, guestName }) {
     }, containerRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [assetsReady]);
 
   const handleFinalOpen = () => {
     // Exit: white flash dominates first (fast power2.out so it covers the
