@@ -9,6 +9,7 @@ import BlessingSection from "./components/BlessingSection";
 import Footer from "./components/Footer";
 import FallingPetals from "./components/FallingPetals";
 import HomePage from "./components/HomePage";
+import { decodeGuestSlug } from "./lib/guestSlug";
 import backgroundImg from "./assets/background.png";
 import roofFlowersImg from "./assets/roof-flowers.png";
 import themeSong from "./assets/audios/theme-song.mp3";
@@ -358,10 +359,10 @@ function Invitation({ guestName }) {
 export default function App() {
   const pathname = window.location.pathname.replace(/\/+$/, "") || "/";
 
-  // New short path: /i or /i/<name>
+  // New short path: /i or /i/<slug>. The slug is base64url-encoded
+  // (decodeGuestSlug also handles legacy percent-encoded paths).
   if (pathname === "/i" || pathname.startsWith("/i/")) {
-    const slug = pathname.slice(3); // strip "/i/"
-    const guestName = slug ? decodeURIComponent(slug.replace(/\+/g, " ")) : "";
+    const guestName = decodeGuestSlug(pathname.slice(3));
     return <Invitation guestName={guestName} />;
   }
 

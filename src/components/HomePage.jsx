@@ -1,12 +1,13 @@
 import { useState, useMemo } from "react";
+import { encodeGuestSlug } from "../lib/guestSlug";
 
-/* Build an invitation URL from the current origin and the chosen guest name.
-   Short path style: /i/<name>  (e.g. /i/Mr.+Panha) — no query string. */
+/* Build an invitation URL from the current origin and the chosen guest
+   name. The guest name is base64url-encoded so Khmer names stay compact
+   (~65 chars) instead of bloating to ~150 chars under percent-encoding. */
 function buildInvitationUrl(guest) {
   const base = `${window.location.origin}/i`;
-  const trimmed = guest.trim();
-  if (!trimmed) return base;
-  return `${base}/${encodeURIComponent(trimmed).replace(/%20/g, "+")}`;
+  const slug = encodeGuestSlug(guest);
+  return slug ? `${base}/${slug}` : base;
 }
 
 export default function HomePage() {
