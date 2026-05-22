@@ -1,5 +1,6 @@
 import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
+import { Analytics } from "@vercel/analytics/react";
 import OpeningScreen from "./components/OpeningScreen";
 import HeroSection from "./components/HeroSection";
 import ScheduleSection from "./components/ScheduleSection";
@@ -379,19 +380,28 @@ function Invitation({ guestName }) {
 export default function App() {
   const pathname = window.location.pathname.replace(/\/+$/, "") || "/";
 
-  // New short path: /i or /i/<slug>. The slug is base64url-encoded
-  // (decodeGuestSlug also handles legacy percent-encoded paths).
+  let route;
   if (pathname === "/i" || pathname.startsWith("/i/")) {
-    const guestName = decodeGuestSlug(pathname.slice(3));
-    return <Invitation guestName={guestName} />;
-  }
-
-  // Legacy path: /invitation?g=<name>  or  ?guest=<name>
-  if (pathname === "/invitation") {
+    // New short path: /i or /i/<slug>. The slug is base64url-encoded
+    // (decodeGuestSlug also handles legacy percent-encoded paths).
+    route = <Invitation guestName={decodeGuestSlug(pathname.slice(3))} />;
+  } else if (pathname === "/invitation") {
+    // Legacy path: /invitation?g=<name>  or  ?guest=<name>
     const params = new URLSearchParams(window.location.search);
-    const guestName = params.get("g") || params.get("guest") || "";
-    return <Invitation guestName={guestName} />;
+    route = (
+      <Invitation
+        guestName={params.get("g") || params.get("guest") || ""}
+      />
+    );
+  } else {
+    route = <HomePage />;
   }
 
-  return <HomePage />;
+  return (
+    <>
+      {route}
+      {/* Vercel Web Analytics — collects page views & route changes. */}
+      <Analytics />
+    </>
+  );
 }
