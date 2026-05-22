@@ -401,42 +401,51 @@ export default function OpeningScreen({ onOpen, guestName, assetsReady = true })
         guestName={guestName}
       />
 
-      {/* ── Roof flowers — z-30, centered along the top edge ── */}
-      <div
-        ref={roofRef}
-        className="absolute z-30 pointer-events-none select-none left-1/2 -translate-x-1/2"
-        style={{ top: "-70px", width: "110%" }}
-      >
-        <img
-          src={roofFlowersImg}
-          alt=""
-          draggable={false}
-          className="w-full block"
+      {/* ── Roof flowers — z-30, centered along the top edge.
+           Wrapped in its own absolute+overflow-hidden layer so iOS Safari
+           clips the 10% horizontal overflow correctly. (The outer flex
+           container's overflow:hidden doesn't always clip transformed
+           descendants on iPad — separate clipping context fixes it.) */}
+      <div className="absolute inset-0 z-30 pointer-events-none overflow-hidden">
+        <div
+          ref={roofRef}
+          className="absolute select-none left-1/2 -translate-x-1/2"
+          style={{ top: "-70px", width: "110%" }}
+        >
+          <img
+            src={roofFlowersImg}
+            alt=""
+            draggable={false}
+            className="w-full block"
+          />
+        </div>
+
+        {/* Pink fog overlay — soft haze around the roof flowers */}
+        <div
+          className="absolute top-0 left-0 w-full"
+          style={{
+            height: "180px",
+            background:
+              "linear-gradient(to bottom, rgba(255,200,215,0.55) 0%, rgba(255,210,222,0.20) 25%, rgba(255,220,230,0) 50%)",
+          }}
         />
       </div>
 
-      {/* ── Soft pink fog overlay — subtle haze around the roof flowers ── */}
-      <div
-        className="absolute top-0 left-0 w-full z-30 pointer-events-none"
-        style={{
-          height: "180px",
-          background:
-            "linear-gradient(to bottom, rgba(255,200,215,0.55) 0%, rgba(255,210,222,0.20) 25%, rgba(255,220,230,0) 50%)",
-        }}
-      />
-
-      {/* ── Bottom flowers — z-30, centered along the bottom edge ── */}
-      <div
-        ref={bottomRef}
-        className="absolute bottom-flowers-anchor z-30 pointer-events-none select-none left-1/2 -translate-x-1/2 blur-[0.5px]"
-        style={{ width: "100%" }}
-      >
-        <img
-          src={bottomFlowersImg}
-          alt=""
-          draggable={false}
-          className="w-full block"
-        />
+      {/* ── Bottom flowers — z-30, centered along the bottom edge.
+           Same dedicated overflow-hidden wrapper pattern as the roof. */}
+      <div className="absolute inset-0 z-30 pointer-events-none overflow-hidden">
+        <div
+          ref={bottomRef}
+          className="absolute bottom-flowers-anchor select-none left-1/2 -translate-x-1/2 blur-[0.5px]"
+          style={{ width: "100%" }}
+        >
+          <img
+            src={bottomFlowersImg}
+            alt=""
+            draggable={false}
+            className="w-full block"
+          />
+        </div>
       </div>
 
       {/* ── Falling petals — above the bg/card, below the flash ── */}
