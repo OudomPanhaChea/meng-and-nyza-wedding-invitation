@@ -1,9 +1,16 @@
 import { useState, useMemo } from "react";
+import { User, Link as LinkIcon, Copy, Eye, Check } from "lucide-react";
 import { encodeGuestSlug } from "../lib/guestSlug";
+import { GOLD } from "../tokens";
+import FallingPetals from "./FallingPetals";
+import SectionTitle from "./SectionTitle";
+import backgroundImg from "../assets/background.png";
+import roofFlowersImg from "../assets/roof-flowers.png";
+import bottomFlowersImg from "../assets/bottom-flowers.png";
 
 /* Build an invitation URL from the current origin and the chosen guest
-   name. The guest name is base64url-encoded so Khmer names stay compact
-   (~65 chars) instead of bloating to ~150 chars under percent-encoding. */
+   name. Khmer names are packed via a custom 1-byte-per-codepoint scheme
+   so URLs stay compact (see src/lib/guestSlug.js). */
 function buildInvitationUrl(guest) {
   const base = `${window.location.origin}/i`;
   const slug = encodeGuestSlug(guest);
@@ -18,129 +25,163 @@ export default function HomePage() {
   const ready = guest.trim().length > 0;
 
   const handleCopy = async () => {
+    if (!ready) return;
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
       setTimeout(() => setCopied(false), 1600);
     } catch {
-      // ignore — fallback below could be added if a target browser needs it
+      /* Clipboard API blocked — recipient can long-press the URL field. */
     }
   };
 
   const handleOpen = () => {
+    if (!ready) return;
     window.location.href = url;
   };
 
   return (
-    <div
-      className="fixed inset-0 mx-auto w-full app-col overflow-y-auto"
-      style={{
-        background:
-          "linear-gradient(160deg, #FFE5EC 0%, #FFF2F5 35%, #FEFCFD 70%, #FDF9EB 100%)",
-      }}
-    >
-      <div className="min-h-full flex flex-col items-center justify-center px-6 py-12">
-        <div className="w-full max-w-[360px] text-center">
-          <h1
-            className="font-moul text-3xl mb-2"
-            style={{ color: "#b59410" }}
-          >
-            ការអញ្ជើញពិសេស
-          </h1>
-          <p
-            className="font-display italic text-lg mb-1"
-            style={{ color: "#b59410", letterSpacing: "0.15em" }}
-          >
+    <div className="relative min-h-dvh w-full overflow-x-hidden">
+      {/* ── Layer 1: photo background + white overlay ── */}
+      <div
+        className="fixed inset-0 mx-auto w-full app-col overflow-hidden"
+        style={{ zIndex: 1 }}
+      >
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${backgroundImg})` }}
+        />
+        <div className="absolute inset-0 bg-white/30 pointer-events-none" />
+      </div>
+
+      {/* ── Layer 2: roof + bottom flowers ── */}
+      <div
+        className="fixed inset-0 mx-auto w-full app-col pointer-events-none overflow-hidden"
+        style={{ zIndex: 30 }}
+      >
+        <div
+          className="absolute select-none left-1/2 -translate-x-1/2"
+          style={{ top: "-120px", width: "112%" }}
+        >
+          <img
+            src={roofFlowersImg}
+            alt=""
+            draggable={false}
+            className="w-full block"
+          />
+        </div>
+        <div
+          className="absolute bottom-flowers-anchor select-none left-1/2 -translate-x-1/2 blur-[0.5px]"
+          style={{ width: "100%" }}
+        >
+          <img
+            src={bottomFlowersImg}
+            alt=""
+            draggable={false}
+            className="w-full block"
+          />
+        </div>
+      </div>
+
+      {/* ── Layer 3: ambient falling petals ── */}
+      <FallingPetals zIndex={25} />
+
+      {/* ── Layer 4: content ── */}
+      <div className="relative z-10 min-h-dvh flex flex-col items-center justify-center px-5 py-16">
+        <div className="w-full max-w-sm space-y-5">
+          <SectionTitle className="home">ការអញ្ជើញពិសេស</SectionTitle>
+
+          <p className="text-center font-display italic text-base tracking-[0.25em]">
             Personalized Invitation
           </p>
           <p
-            className="font-hanuman text-xs"
+            className="text-center font-hanuman text-xs -mt-3"
             style={{ color: "rgba(181,148,16,0.75)" }}
           >
             បំពេញឈ្មោះភ្ញៀវ ដើម្បីបង្កើតតំណភ្ជាប់
           </p>
 
-          {/* Divider */}
-          <div className="my-6 mx-auto h-px w-32"
-            style={{
-              background:
-                "linear-gradient(to right, transparent, rgba(181,148,16,0.55), transparent)",
-            }}
-          />
+          {/* Form card — matches BlessingSection's translucent card */}
+          <div className="bg-black/5 backdrop-blur-xs mt-6 rounded-lg p-5 space-y-5">
+            {/* Guest name */}
+            <div className="space-y-1.5">
+              <label className="flex gap-2 font-hanuman font-semibold text-base">
+                <User size={20} strokeWidth={2.25} style={{ color: GOLD }} />
+                <span>ឈ្មោះភ្ញៀវ</span>
+              </label>
+              <input
+                className="blessing-input"
+                value={guest}
+                onChange={(e) => setGuest(e.target.value)}
+                placeholder="e.g. Mr. Panha"
+                maxLength={60}
+              />
+            </div>
 
-          {/* Input */}
-          <label
-            className="block text-left font-hanuman text-xs tracking-widest uppercase mb-2"
-            style={{ color: "#b59410" }}
-          >
-            ឈ្មោះភ្ញៀវ · Guest Name
-          </label>
-          <input
-            value={guest}
-            onChange={(e) => setGuest(e.target.value)}
-            placeholder="e.g. Mr. Panha"
-            className="w-full px-4 py-3 rounded-full outline-none transition"
-            style={{
-              border: "1.5px solid #b59410",
-              background: "rgba(255,255,255,0.85)",
-              color: "#3a2809",
-              fontFamily: "var(--font-hanuman)",
-              fontSize: "0.95rem",
-            }}
-          />
+            {/* Generated link */}
+            <div className="space-y-1.5">
+              <label className="flex gap-2 font-hanuman font-semibold text-base">
+                <LinkIcon
+                  size={20}
+                  strokeWidth={2.25}
+                  style={{ color: GOLD }}
+                />
+                <span>តំណភ្ជាប់</span>
+              </label>
+              <div
+                className="blessing-input break-all text-xs"
+                style={{
+                  minHeight: "2.75rem",
+                  fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+                  opacity: ready ? 1 : 0.55,
+                }}
+              >
+                {url}
+              </div>
+            </div>
 
-          {/* Generated link preview */}
-          <div className="mt-6 text-left">
-            <p
-              className="font-hanuman text-xs tracking-widest uppercase mb-2"
-              style={{ color: "#b59410" }}
-            >
-              តំណភ្ជាប់ · Generated Link
-            </p>
-            <div
-              className="rounded-md px-3 py-2 break-all text-xs"
-              style={{
-                background: "rgba(255,255,255,0.85)",
-                border: "1px solid rgba(181,148,16,0.35)",
-                color: "#3a2809",
-                fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
-                minHeight: "2.5rem",
-              }}
-            >
-              {ready ? url : <span style={{ opacity: 0.55 }}>{url}</span>}
+            {/* Actions */}
+            <div className="flex justify-center gap-3 pt-1">
+              <button
+                type="button"
+                onClick={handleCopy}
+                disabled={!ready}
+                className="btn-open inline-flex items-center gap-2"
+                style={{
+                  opacity: ready ? 1 : 0.55,
+                  cursor: ready ? "pointer" : "not-allowed",
+                }}
+              >
+                {copied ? (
+                  <>
+                    <Check size={16} strokeWidth={2.5} />
+                    <span>Copied</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy size={16} strokeWidth={2.5} />
+                    <span>Copy</span>
+                  </>
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={handleOpen}
+                disabled={!ready}
+                className="btn-open inline-flex items-center gap-2"
+                style={{
+                  opacity: ready ? 1 : 0.55,
+                  cursor: ready ? "pointer" : "not-allowed",
+                }}
+              >
+                <Eye size={16} strokeWidth={2.5} />
+                <span>Preview</span>
+              </button>
             </div>
           </div>
 
-          {/* Actions */}
-          <div className="mt-6 flex gap-3 justify-center">
-            <button
-              type="button"
-              onClick={handleCopy}
-              disabled={!ready}
-              className="btn-open"
-              style={{
-                opacity: ready ? 1 : 0.55,
-                cursor: ready ? "pointer" : "not-allowed",
-              }}
-            >
-              {copied ? "Copied ✓" : "Copy Link"}
-            </button>
-            <button
-              type="button"
-              onClick={handleOpen}
-              disabled={!ready}
-              className="btn-open"
-              style={{
-                opacity: ready ? 1 : 0.55,
-                cursor: ready ? "pointer" : "not-allowed",
-              }}
-            >
-              Preview
-            </button>
-          </div>
-
           <p
-            className="mt-8 font-display italic text-xs"
+            className="text-center font-display italic text-xs mt-4"
             style={{ color: "rgba(181,148,16,0.6)" }}
           >
             Share the link with your guest — they'll see their name on the
