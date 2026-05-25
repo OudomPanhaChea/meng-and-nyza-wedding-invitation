@@ -50,14 +50,19 @@ function FixedDecoration({ opened }) {
       scale: 1.28,
       y: 12,
     });
+    // xPercent: -50 owns horizontal centering (NOT Tailwind's
+    // -translate-x-1/2). GSAP's transform overrides the CSS one, so
+    // relying on the class leaves the element un-centered on first paint.
     gsap.set(roofRef.current, {
       opacity: 0,
+      xPercent: -50,
       y: -14,
       scale: 1.12,
       transformOrigin: "50% 0%",
     });
     gsap.set(bottomRef.current, {
       opacity: 0,
+      xPercent: -50,
       y: 14,
       scale: 1.12,
       transformOrigin: "50% 100%",
@@ -147,7 +152,7 @@ function FixedDecoration({ opened }) {
       >
         <div
           ref={roofRef}
-          className="absolute select-none left-1/2 -translate-x-1/2"
+          className="absolute select-none left-1/2"
           style={{ top: "-120px", width: "112%" }}
         >
           <img

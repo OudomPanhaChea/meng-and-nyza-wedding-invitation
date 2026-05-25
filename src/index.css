@@ -122,6 +122,16 @@
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: var(--color-pink-50); }
   ::-webkit-scrollbar-thumb { background: var(--color-pink-300); border-radius: 2px; }
+
+  /* Hidden-scrollbar helper — used by the envelope cover so the
+     scrollable cover doesn't show a stray scrollbar on tall content. */
+  .no-scrollbar {
+    scrollbar-width: none;          /* Firefox */
+    -ms-overflow-style: none;       /* IE/Edge legacy */
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;                  /* Chrome/Safari/Webkit */
+  }
 }
 
 /* ─── Components ─────────────────────────────── */

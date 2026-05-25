@@ -91,11 +91,20 @@ function HeroCover({ onOpen, cardRef, guestName }) {
   return (
     <div
       ref={cardRef}
-      className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none"
-      style={{ opacity: 0 }}
+      className="absolute inset-0 z-20 overflow-y-auto overflow-x-hidden no-scrollbar"
+      style={{
+        opacity: 0,
+        // Body has touch-action: none during the intro to lock scroll —
+        // override here so users on short viewports (Telegram in-app
+        // browser, in particular) can pan the card to reach content
+        // clipped at the top.
+        touchAction: "pan-y",
+        WebkitOverflowScrolling: "touch",
+      }}
     >
-      <div className="relative pointer-events-auto text-center">
-        <div className="px-5 py-7">
+      <div className="min-h-full flex items-center justify-center py-6">
+        <div className="relative pointer-events-auto text-center">
+          <div className="px-5 py-7">
           {/* ── Khmer title ── */}
           <h1
             className="open-title font-moul text-2xl text-nowrap"
@@ -145,14 +154,15 @@ function HeroCover({ onOpen, cardRef, guestName }) {
           
         </div>
 
-        {/* ── CTA button ── */}
-        <div className="flex justify-center">
-          <button
-            onClick={onOpen}
-            className="open-btn btn-open"
-          >
-            បើកធៀប
-          </button>
+          {/* ── CTA button ── */}
+          <div className="flex justify-center">
+            <button
+              onClick={onOpen}
+              className="open-btn btn-open"
+            >
+              បើកធៀប
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -177,12 +187,14 @@ export default function OpeningScreen({ onOpen, guestName, assetsReady = true })
       gsap.set(cardRef.current, { opacity: 0, scale: 1.08, y: 0 });
       gsap.set(roofRef.current, {
         opacity: 0,
+        xPercent: -50,
         y: -14,
         scale: 1.12,
         transformOrigin: "50% 0%",
       });
       gsap.set(bottomRef.current, {
         opacity: 0,
+        xPercent: -50,
         y: 14,
         scale: 1.12,
         transformOrigin: "50% 100%",
@@ -209,14 +221,21 @@ export default function OpeningScreen({ onOpen, guestName, assetsReady = true })
       gsap.set(cardRef.current, { opacity: 0, scale: 1.08, y: 0 });
       // Roof flowers start slightly larger and pushed up — settle into
       // place from the top as the scene resolves.
+      // xPercent: -50 handles horizontal centering here (NOT Tailwind's
+      // -translate-x-1/2). GSAP overrides the inline transform, so if we
+      // relied on the CSS class the element would lose its centering the
+      // moment GSAP wrote scale/y — visible on first load as the flowers
+      // slamming to the right edge.
       gsap.set(roofRef.current, {
         opacity: 0,
+        xPercent: -50,
         y: -14,
         scale: 1.12,
         transformOrigin: "50% 0%",
       });
       gsap.set(bottomRef.current, {
         opacity: 0,
+        xPercent: -50,
         y: 14,
         scale: 1.12,
         transformOrigin: "50% 100%",
@@ -409,7 +428,7 @@ export default function OpeningScreen({ onOpen, guestName, assetsReady = true })
       <div className="absolute inset-0 z-30 pointer-events-none overflow-hidden">
         <div
           ref={roofRef}
-          className="absolute select-none left-1/2 -translate-x-1/2"
+          className="absolute select-none left-1/2"
           style={{ top: "-120px", width: "112%" }}
         >
           <img
@@ -437,7 +456,7 @@ export default function OpeningScreen({ onOpen, guestName, assetsReady = true })
       <div className="absolute inset-0 z-30 pointer-events-none overflow-hidden">
         <div
           ref={bottomRef}
-          className="absolute bottom-flowers-anchor select-none left-1/2 -translate-x-1/2 blur-[0.5px]"
+          className="absolute bottom-flowers-anchor select-none left-1/2 blur-[0.5px]"
           style={{ width: "112%" }}
         >
           <img
