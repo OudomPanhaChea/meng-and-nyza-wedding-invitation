@@ -22,7 +22,7 @@ function GuestNameInFrame({ name }) {
     const safe = safeRef.current;
     const txt = textRef.current;
     if (!safe || !txt) return;
-    const MAX_PX = 24; // 1.5rem (text-2xl)
+    const MAX_PX = 18; // 1
     const MIN_PX = 9;
     let size = MAX_PX;
     txt.style.fontSize = size + "px";
@@ -76,7 +76,7 @@ function GuestNameInFrame({ name }) {
       >
         <span
           ref={textRef}
-          className="font-moul whitespace-nowrap leading-none"
+          className="font-hanuman font-semibold whitespace-nowrap leading-none"
           style={{ color: GOLD }}
         >
           {name}
